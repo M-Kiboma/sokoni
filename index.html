@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sokoni — Wholesale & Retail Marketplace in Kisumu</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brandRed: '#B91C1C',
+            brandRedDark: '#991B1B',
+            brandGreen: '#15803D',
+            brandGreenDark: '#166534',
+            brandCream: '#FAF9F6',
+            brandBlack: '#111827'
+          },
+          fontFamily: {
+            serif: ['"Playfair Display"', 'serif'],
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { background-color: #FAF9F6; color: #111827; scroll-behavior: smooth; }
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .toast-enter { animation: fadeSlideUp 0.25s ease-out forwards; }
+  </style>
+</head>
+<body class="font-sans antialiased selection:bg-brandRed selection:text-white">
+
+  <!-- Top Announcement Bar -->
+  <div class="bg-brandBlack text-white text-xs sm:text-sm py-2 px-4 text-center">
+    <span class="font-semibold text-green-400">DELIVERING WITHIN KISUMU</span> • Wholesale & Retail (250g to Bulk Sacks) • Direct Line: 
+    <a href="tel:0702247123" class="underline hover:text-red-300 font-semibold">0702 247 123</a>
+  </div>
+
+  <!-- Sticky Navigation -->
+  <header class="sticky top-0 z-40 bg-white/95 backdrop-blur border-b border-gray-200 shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      <!-- Sokoni Brand Identity -->
+      <a href="#" class="flex items-center gap-3 shrink-0">
+        <div class="w-11 h-11 rounded-full border-2 border-brandRed flex items-center justify-center bg-brandCream">
+          <svg class="w-6 h-6 text-brandGreen" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M17 8C8 10 5.9 16.17 3.82 21.34l1.89.66l.95-2.3c.48.17.98.3 1.34.3C19 20 22 3 22 3c-1 2-8 2.25-13 3.25S2 11.5 2 13.5s1.75 3.75 1.75 3.75C7 8 17 8 17 8Z"/>
+          </svg>
+        </div>
+        <div>
+          <span class="font-serif text-2xl sm:text-3xl font-bold tracking-tight text-brandRed block leading-none">Sokoni</span>
+          <span class="text-[11px] font-bold uppercase tracking-widest text-brandBlack">Kisumu • Wholesale & Retail</span>
+        </div>
+      </a>
+
+      <!-- Search Input (Desktop) -->
+      <div class="hidden md:flex flex-1 max-w-md relative">
+        <input 
+          type="text" 
+          id="desktopSearch"
+          placeholder="Search spices, oils, nuts, grains, extracts, fryums..." 
+          class="w-full pl-10 pr-9 py-2.5 rounded-full border border-gray-300 focus:outline-none focus:border-brandRed focus:ring-2 focus:ring-brandRed/20 text-sm bg-brandCream"
+        />
+        <svg class="w-5 h-5 text-gray-400 absolute left-3.5 top-2.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <button id="clearSearchDesktop" onclick="clearSearch()" class="hidden absolute right-3 top-2.5 text-gray-400 hover:text-brandRed text-sm font-bold">✕</button>
+      </div>
+
+      <!-- Actions -->
+      <div class="flex items-center gap-3">
+        <a href="#contact" class="hidden sm:inline-block text-sm font-semibold text-gray-700 hover:text-brandRed transition">Contact</a>
+        <button 
+          onclick="toggleCart()" 
+          class="relative flex items-center gap-2 bg-brandRed hover:bg-brandRedDark text-white px-4 py-2.5 rounded-full font-semibold text-sm transition shadow-sm"
+        >
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/>
+          </svg>
+          <span>Order List</span>
+          <span id="cartBadge" class="bg-brandGreen text-white text-xs font-bold px-2 py-0.5 rounded-full">0</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mobile Search -->
+    <div class="md:hidden px-4 pb-3 relative">
+      <input 
+        type="text" 
+        id="mobileSearch"
+        placeholder="Search spices, oils, nuts, grains, fryums..." 
+        class="w-full px-4 py-2 rounded-full border border-gray-300 focus:outline-none focus:border-brandRed text-sm bg-brandCream"
+      />
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="relative bg-white border-b border-gray-200 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-14 lg:py-16 grid lg:grid-cols-12 gap-8 items-center">
+      <div class="lg:col-span-7 space-y-5">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-green-50 border border-brandGreen/30 text-brandGreen text-xs font-bold uppercase tracking-wider">
+          <span class="w-2 h-2 rounded-full bg-brandGreen"></span>
+          Same-Day Delivery Within Kisumu
+        </div>
+        <h1 class="font-serif text-4xl sm:text-5xl font-bold text-brandBlack leading-tight">
+          Your Complete Natural & Pantry Store in <span class="text-brandRed italic">Kisumu</span>.
+        </h1>
+        <p class="text-base text-gray-600 max-w-2xl leading-relaxed">
+          Order retail packs from <strong>250g</strong> or wholesale bulk quantities across spices, herbs, herbal extracts, natural oils, nuts, seeds, grains, dried fruits, salts, essences, and fryums—delivered straight to your doorstep or shop within Kisumu.
+        </p>
+        <div class="flex flex-wrap gap-3 pt-1">
+          <a href="#catalog" class="bg-brandRed hover:bg-brandRedDark text-white font-semibold px-6 py-3 rounded-full shadow-md transition text-sm">
+            Shop Catalogue
+          </a>
+          <button onclick="filterBulkOnly()" class="bg-brandCream hover:bg-gray-200 text-brandBlack border border-gray-300 font-semibold px-6 py-3 rounded-full transition text-sm">
+            View Bulk / Wholesale Deals
+          </button>
+        </div>
+      </div>
+
+      <!-- Quick How-to-Order Card -->
+      <div class="lg:col-span-5">
+        <div class="bg-brandCream border-2 border-brandRed/20 rounded-3xl p-6 shadow-md relative">
+          <div class="absolute -top-3.5 right-6 bg-brandGreen text-white text-xs font-bold px-3.5 py-1 rounded-full uppercase tracking-wider shadow">
+            Kisumu Dispatch
+          </div>
+          <h2 class="font-serif text-xl font-bold text-brandBlack mb-3">How Ordering Works</h2>
+          <ol class="space-y-2.5 text-sm text-gray-700 list-decimal list-inside">
+            <li><strong>Pick Your Items:</strong> Select 250g, 500g, 1kg, or bulk packs.</li>
+            <li><strong>Enter Kisumu Drop-Off:</strong> Add your estate, landmark, or shop location in the cart.</li>
+            <li><strong>Send via WhatsApp:</strong> Your itemized order goes straight to our Kisumu dispatch line.</li>
+          </ol>
+          <div class="mt-5 pt-4 border-t border-gray-200 flex items-center justify-between text-xs text-gray-600">
+            <span>Location: <strong>Within Kisumu</strong></span>
+            <span>Direct Line: <a href="tel:0702247123" class="text-brandRed font-bold hover:underline">0702 247 123</a></span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Catalogue Section -->
+  <main id="catalog" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+      <div>
+        <h2 class="font-serif text-3xl font-bold text-brandBlack">Complete Product Catalogue</h2>
+        <p class="text-sm text-gray-600 mt-1">Select your preferred weight or pack size directly on any product card.</p>
+      </div>
+      <div class="flex items-center gap-3 text-sm font-medium text-gray-600">
+        <span>Showing <strong id="itemCount" class="text-brandRed">0</strong> products</span>
+      </div>
+    </div>
+
+    <!-- Category Filter Pills -->
+    <div id="categoryTabs" class="flex items-center gap-2 overflow-x-auto no-scrollbar pb-4 mb-6">
+      <!-- Populated via JS -->
+    </div>
+
+    <!-- Product Grid -->
+    <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+      <!-- Populated via JS -->
+    </div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-16 bg-white rounded-2xl border border-gray-200">
+      <p class="text-lg font-semibold text-gray-800">No matching products found</p>
+      <p class="text-sm text-gray-500 mt-1">Try adjusting your search term or selecting "All".</p>
+      <button onclick="resetFilters()" class="mt-4 px-5 py-2 bg-brandRed text-white text-sm font-semibold rounded-full">Reset Filters</button>
+    </div>
+  </main>
+
+  <!-- Footer / Contact Section -->
+  <footer id="contact" class="bg-brandBlack text-white mt-16 border-t-4 border-brandRed">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <span class="font-serif text-3xl font-bold text-brandRed">Sokoni</span>
+          <span class="text-xs uppercase tracking-widest bg-brandGreen px-2.5 py-1 rounded font-bold">Kisumu</span>
+        </div>
+        <p class="text-gray-400 text-sm leading-relaxed">
+          Your trusted Kisumu wholesale and retail source for premium spices, herbs, natural oils, nuts, seeds, grains, dried fruits, extracts, salts, essences, and fryums.
+        </p>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-base mb-3 text-white">Location & Direct Order Line</h3>
+        <ul class="space-y-2.5 text-sm text-gray-300">
+          <li>📍 <strong>Service Area:</strong> Within Kisumu</li>
+          <li>📞 <strong>Call / WhatsApp:</strong> <a href="tel:0702247123" class="text-green-400 font-bold hover:underline">0702 247 123</a></li>
+          <li>🚚 Fast doorstep & shop delivery across Kisumu</li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="font-bold text-base mb-3 text-white">Quick Departments</h3>
+        <div class="flex flex-wrap gap-2 text-xs">
+          <button onclick="selectCategory('Spices')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Spices</button>
+          <button onclick="selectCategory('Herbs')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Herbs</button>
+          <button onclick="selectCategory('Herbal Extracts')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Herbal Extracts</button>
+          <button onclick="selectCategory('Natural Oils')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Natural Oils</button>
+          <button onclick="selectCategory('Nuts & Seeds')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Nuts & Seeds</button>
+          <button onclick="selectCategory('Dried Fruits & Cereals')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Dried Fruits & Cereals</button>
+          <button onclick="selectCategory('Salts & Crystals')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Salts & Crystals</button>
+          <button onclick="selectCategory('Essences & Flavourings')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Essences</button>
+          <button onclick="selectCategory('Fryums')" class="bg-gray-800 hover:bg-brandRed px-3 py-1.5 rounded-full transition">Fryums</button>
+        </div>
+      </div>
+    </div>
+    <div class="border-t border-gray-800 py-4 text-center text-xs text-gray-500">
+      &copy; 2026 Sokoni Marketplace — Kisumu. All Rights Reserved.
+    </div>
+  </footer>
+
+  <!-- Toast Notification Container -->
+  <div id="toastContainer" class="fixed bottom-5 left-1/2 -translate-x-1/2 z-50 pointer-events-none flex flex-col gap-2"></div>
+
+  <!-- Slide-Over Order Cart Drawer -->
+  <div id="cartOverlay" onclick="toggleCart()" class="fixed inset-0 bg-black/50 z-50 hidden backdrop-blur-xs"></div>
+  <aside id="cartDrawer" class="fixed top-0 right-0 h-full w-full max-w-md bg-white z-50 shadow-2xl transform translate-x-full transition-transform duration-300 flex flex-col">
+    <div class="p-5 border-b border-gray-200 flex items-center justify-between bg-brandCream">
+      <div>
+        <h3 class="font-serif text-xl font-bold text-brandBlack">Your Sokoni Order</h3>
+        <p class="text-xs text-gray-500">Delivery within Kisumu • Direct Line: 0702 247 123</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button onclick="clearCart()" class="text-xs text-brandRed hover:underline font-semibold px-2">Clear All</button>
+        <button onclick="toggleCart()" class="p-2 rounded-full hover:bg-gray-200 text-gray-600">✕</button>
+      </div>
+    </div>
+
+    <div id="cartItems" class="flex-1 overflow-y-auto p-5 space-y-3">
+      <!-- Cart items injected here -->
+    </div>
+
+    <!-- Customer Details + Checkout -->
+    <div class="p-5 border-t border-gray-200 bg-brandCream space-y-3">
+      <div class="grid grid-cols-2 gap-2.5">
+        <input 
+          type="text" 
+          id="customerName" 
+          placeholder="Your Name" 
+          class="px-3 py-2 rounded-lg border border-gray-300 text-xs bg-white focus:outline-none focus:border-brandRed"
+        />
+        <input 
+          type="text" 
+          id="customerLocation" 
+          placeholder="Area in Kisumu (e.g. Milimani, CBD)" 
+          class="px-3 py-2 rounded-lg border border-gray-300 text-xs bg-white focus:outline-none focus:border-brandRed"
+        />
+      </div>
+
+      <div class="flex justify-between items-center text-base font-bold pt-1">
+        <span>Estimated Total:</span>
+        <span id="cartTotal" class="text-brandRed text-xl">KES 0</span>
+      </div>
+      <button 
+        onclick="checkoutWhatsApp()" 
+        class="w-full py-3.5 bg-brandGreen hover:bg-brandGreenDark text-white font-bold rounded-xl shadow-md transition flex items-center justify-center gap-2 text-sm"
+      >
+        <span>Send Order via WhatsApp (0702 247 123)</span>
+      </button>
+    </div>
+  </aside>
+
+  <!-- Complete Product Data & Interactive Logic -->
+  <script>
+    const products = [
+      // 1. SPICES
+      { id: 1, name: "Turmeric", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 2, name: "Cumin Powder", category: "Spices", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 3, name: "Coriander Powder", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 4, name: "Cumin Whole", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 5, name: "Tea Masala", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 6, name: "Black Pepper Powder", category: "Spices", price: 2000, unit: "per kg", unitType: "kg" },
+      { id: 7, name: "Black Pepper Whole", category: "Spices", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 8, name: "Garlic Powder", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 9, name: "Garlic Whole", category: "Spices", price: 400, unit: "per kg", unitType: "kg" },
+      { id: 10, name: "Pilau Masala", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 11, name: "Onion Powder", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 12, name: "Garam Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 13, name: "Beef Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 14, name: "Cayenne Pepper", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 15, name: "Cardamom Powder", category: "Spices", price: 4000, unit: "per kg", unitType: "kg" },
+      { id: 16, name: "Cardamom Whole", category: "Spices", price: 4000, unit: "per kg", unitType: "kg" },
+      { id: 17, name: "Ginger Powder", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 18, name: "Ginger Whole", category: "Spices", price: 150, unit: "per kg", unitType: "kg" },
+      { id: 19, name: "Ginger Sack (Bulk)", category: "Spices", price: 15000, unit: "per sack", unitType: "pack", isBulk: true },
+      { id: 20, name: "Chips Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 21, name: "Chicken Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 22, name: "Hot Pepper", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 23, name: "Githeri Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 24, name: "Natural Royco", category: "Spices", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 25, name: "Chilli Lemon", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 26, name: "Curry Powder", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 27, name: "Biryani Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 28, name: "Fish Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 29, name: "Mixed Spices", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 30, name: "Green Cardamom", category: "Spices", price: 5000, unit: "per kg", unitType: "kg" },
+      { id: 31, name: "Spanish Paprika", category: "Spices", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 32, name: "White Pepper Powder", category: "Spices", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 33, name: "White Pepper Whole", category: "Spices", price: 2000, unit: "per kg", unitType: "kg" },
+      { id: 34, name: "Tandoori Masala", category: "Spices", price: 1000, unit: "per kg", unitType: "kg" },
+
+      // 2. HERBS
+      { id: 35, name: "Thyme Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 36, name: "Thyme Whole", category: "Herbs", price: 2200, unit: "per kg", unitType: "kg" },
+      { id: 37, name: "Liwa Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 38, name: "Mallow", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 39, name: "Mixed Herbs", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 40, name: "Mint", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 41, name: "Red Cloves", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 42, name: "Marjoram", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 43, name: "Sage", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 44, name: "Moringa", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 45, name: "Mkombero", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 46, name: "Oregano", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 47, name: "Spearmint", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 48, name: "Dandelion", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 49, name: "Burdock Roots", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 50, name: "Milk Thistle", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 51, name: "Holy Basil", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 52, name: "Quassia Powder", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 53, name: "Baobab Powder", category: "Herbs", price: 300, unit: "per kg", unitType: "kg" },
+      { id: 54, name: "Baobab Seeds", category: "Herbs", price: 100, unit: "per kg", unitType: "kg" },
+      { id: 55, name: "Henna Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 56, name: "Amla Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 57, name: "Rosemary Powder", category: "Herbs", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 58, name: "Rosemary Whole", category: "Herbs", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 59, name: "Fenugreek Powder", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 60, name: "Fenugreek Whole", category: "Herbs", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 61, name: "Aloe Vera Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 62, name: "Lemongrass", category: "Herbs", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 63, name: "Neem Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 64, name: "Chebe Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 65, name: "Wheatgrass Powder", category: "Herbs", price: 1400, unit: "per kg", unitType: "kg" },
+      { id: 66, name: "Castor Seeds", category: "Herbs", price: 1400, unit: "per kg", unitType: "kg" },
+      { id: 67, name: "Curry Leaves", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 68, name: "Stevia Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 69, name: "Black Seed Powder", category: "Herbs", price: 1400, unit: "per kg", unitType: "kg" },
+      { id: 70, name: "Black Seeds", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 71, name: "Tylosema Fassoglensis", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 72, name: "Senna Leaves Powder", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 73, name: "Desiccated Coconut", category: "Herbs", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 74, name: "Sea Moss Whole", category: "Herbs", price: 2200, unit: "per kg", unitType: "kg" },
+      { id: 75, name: "Sea Moss Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 76, name: "Coffee Powder", category: "Herbs", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 77, name: "Cocoa Powder", category: "Herbs", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 78, name: "Parsley", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 79, name: "Raspberry Leaves", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 80, name: "Slimming Tea", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 81, name: "Slippery Elm", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 82, name: "Okra Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 83, name: "Star Anise", category: "Herbs", price: 1900, unit: "per kg", unitType: "kg" },
+      { id: 84, name: "Licorice Root", category: "Herbs", price: 4500, unit: "per kg", unitType: "kg" },
+      { id: 85, name: "Dill Seeds", category: "Herbs", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 86, name: "Purple Tea", category: "Herbs", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 87, name: "Green Tea", category: "Herbs", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 88, name: "Psyllium Husk", category: "Herbs", price: 4500, unit: "per kg", unitType: "kg" },
+      { id: 89, name: "Soursop", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 90, name: "Dinsi Powder", category: "Herbs", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 91, name: "Hibiscus Powder", category: "Herbs", price: 1400, unit: "per kg", unitType: "kg" },
+      { id: 92, name: "Chamomile Powder", category: "Herbs", price: 2600, unit: "per kg", unitType: "kg" },
+      { id: 93, name: "Chamomile Whole", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 94, name: "Aidan Fruit", category: "Herbs", price: 5000, unit: "per kg", unitType: "kg" },
+      { id: 95, name: "Alligator Pepper", category: "Herbs", price: 3000, unit: "per kg", unitType: "kg" },
+      { id: 96, name: "Bay Leaves", category: "Herbs", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 97, name: "Moringa Seeds", category: "Herbs", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 98, name: "Prunus Africana", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 99, name: "Chocolate Powder", category: "Herbs", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 100, name: "Activated Charcoal", category: "Herbs", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 101, name: "Nutmeg Powder", category: "Herbs", price: 2400, unit: "per kg", unitType: "kg" },
+      { id: 102, name: "Nutmeg Whole", category: "Herbs", price: 2200, unit: "per kg", unitType: "kg" },
+
+      // 3. HERBAL EXTRACTS
+      { id: 103, name: "Black Maca Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 104, name: "Ginseng Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 105, name: "Tongkat Ali", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 106, name: "Horny Goat Weed", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 107, name: "Ginkgo Biloba", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 108, name: "Red Maca Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 109, name: "Aguaje Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 110, name: "Chasteberry", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 111, name: "Lion's Mane", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 112, name: "Black Cohosh", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 113, name: "Marine Collagen", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 114, name: "Bovine Collagen", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 115, name: "Shilajit", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 116, name: "Mullein Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 117, name: "Elderberry Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 118, name: "Cranberry Extract", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 119, name: "Magnesium Glycinate", category: "Herbal Extracts", price: 7500, unit: "per kg", unitType: "kg" },
+      { id: 120, name: "Beetroot Extract", category: "Herbal Extracts", price: 5000, unit: "per kg", unitType: "kg" },
+
+      // 4. NATURAL OILS
+      { id: 164, name: "Cold-Pressed Coconut Oil", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 165, name: "Jamaican Black Castor Oil", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 166, name: "Black Seed Oil (Nigella Sativa)", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 167, name: "Extra Virgin Olive Oil", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 168, name: "Rosemary Essential & Carrier Oil", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 169, name: "Sweet Almond Oil", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 170, name: "Avocado Oil", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+      { id: 171, name: "Tea Tree & Peppermint Oils", category: "Natural Oils", price: null, unit: "Wholesale / Retail", unitType: "pack" },
+
+      // 5. NUTS & SEEDS
+      { id: 121, name: "Tiger Nuts", category: "Nuts & Seeds", price: 8000, unit: "per kg", unitType: "kg" },
+      { id: 122, name: "Chia Seeds", category: "Nuts & Seeds", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 123, name: "Mustard Seeds", category: "Nuts & Seeds", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 124, name: "Walnuts", category: "Nuts & Seeds", price: 3300, unit: "per kg", unitType: "kg" },
+      { id: 125, name: "Almonds", category: "Nuts & Seeds", price: 3200, unit: "per kg", unitType: "kg" },
+      { id: 126, name: "Cashew Nuts", category: "Nuts & Seeds", price: 1500, unit: "per kg", unitType: "kg" },
+      { id: 127, name: "Flax Seeds", category: "Nuts & Seeds", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 128, name: "Brazil Nuts", category: "Nuts & Seeds", price: 4500, unit: "per kg", unitType: "kg" },
+      { id: 130, name: "Sunflower Seeds", category: "Nuts & Seeds", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 131, name: "Hazelnuts", category: "Nuts & Seeds", price: 5000, unit: "per kg", unitType: "kg" },
+      { id: 132, name: "Pumpkin Seeds", category: "Nuts & Seeds", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 133, name: "Macadamia", category: "Nuts & Seeds", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 136, name: "Groundnut Powder", category: "Nuts & Seeds", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 137, name: "Pistachio", category: "Nuts & Seeds", price: 2800, unit: "per kg", unitType: "kg" },
+      { id: 138, name: "White Sesame", category: "Nuts & Seeds", price: 1400, unit: "per kg", unitType: "kg" },
+
+      // 6. DRIED FRUITS & CEREALS
+      { id: 139, name: "Dates", category: "Dried Fruits & Cereals", price: 400, unit: "per kg", unitType: "kg" },
+      { id: 140, name: "Dried Cranberries", category: "Dried Fruits & Cereals", price: 3000, unit: "per kg", unitType: "kg" },
+      { id: 141, name: "Dried Blueberries", category: "Dried Fruits & Cereals", price: 6000, unit: "per kg", unitType: "kg" },
+      { id: 142, name: "Black Raisins", category: "Dried Fruits & Cereals", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 143, name: "Golden Raisins", category: "Dried Fruits & Cereals", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 144, name: "Goji Berries", category: "Dried Fruits & Cereals", price: 3800, unit: "per kg", unitType: "kg" },
+      { id: 145, name: "Dried Apricots", category: "Dried Fruits & Cereals", price: 3500, unit: "per kg", unitType: "kg" },
+      { id: 129, name: "Oats (Whole / Rolled)", category: "Dried Fruits & Cereals", price: 600, unit: "per kg", unitType: "kg" },
+      { id: 134, name: "Quinoa Seeds", category: "Dried Fruits & Cereals", price: 2800, unit: "per kg", unitType: "kg" },
+      { id: 135, name: "Amaranth Grains", category: "Dried Fruits & Cereals", price: 1000, unit: "per kg", unitType: "kg" },
+
+      // 7. SALTS & CRYSTALS
+      { id: 146, name: "Sea Salt", category: "Salts & Crystals", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 147, name: "Epsom Salt", category: "Salts & Crystals", price: 1200, unit: "per kg", unitType: "kg" },
+      { id: 148, name: "Pink Himalayan Salt", category: "Salts & Crystals", price: 1000, unit: "per kg", unitType: "kg" },
+      { id: 149, name: "Roasted Aloe Vera", category: "Salts & Crystals", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 150, name: "Menthol Crystals (Grade A)", category: "Salts & Crystals", price: 7000, unit: "per kg", unitType: "kg" },
+      { id: 151, name: "Menthol Crystals (Standard)", category: "Salts & Crystals", price: 5000, unit: "per kg", unitType: "kg" },
+      { id: 152, name: "Citric Acid (1kg)", category: "Salts & Crystals", price: 200, unit: "per kg", unitType: "kg" },
+      { id: 153, name: "Citric Acid (25kg Bag)", category: "Salts & Crystals", price: 5000, unit: "per 25kg bag", unitType: "pack", isBulk: true },
+      { id: 154, name: "Sodium Saccharin", category: "Salts & Crystals", price: 4000, unit: "per kg", unitType: "kg" },
+      { id: 155, name: "White Ubani", category: "Salts & Crystals", price: 1600, unit: "per kg", unitType: "kg" },
+      { id: 156, name: "Arabic Gum", category: "Salts & Crystals", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 157, name: "Myrrh / Malmal", category: "Salts & Crystals", price: 1800, unit: "per kg", unitType: "kg" },
+      { id: 158, name: "Ajinomoto", category: "Salts & Crystals", price: 800, unit: "per kg", unitType: "kg" },
+      { id: 159, name: "Aspartame", category: "Salts & Crystals", price: 6000, unit: "per kg", unitType: "kg" },
+      { id: 160, name: "Baking Soda", category: "Salts & Crystals", price: 150, unit: "per kg", unitType: "kg" },
+
+      // 8. ESSENCES & FLAVOURINGS
+      { id: 161, name: "Vanilla Powder", category: "Essences & Flavourings", price: 2200, unit: "per kg", unitType: "kg" },
+      { id: 162, name: "All Food Colours (Dozen)", category: "Essences & Flavourings", price: 180, unit: "per dozen", unitType: "pack", isBulk: true },
+      { id: 163, name: "All Essences (Dozen)", category: "Essences & Flavourings", price: 1200, unit: "per dozen", unitType: "pack", isBulk: true },
+
+      // 9. FRYUMS
+      { id: 172, name: "Assorted Coloured Fryums (Pellets)", category: "Fryums", price: null, unit: "Wholesale / Retail", unitType: "pack", isBulk: true },
+      { id: 173, name: "Wheel & Ring Fryums", category: "Fryums", price: null, unit: "Wholesale / Retail", unitType: "pack", isBulk: true },
+      { id: 174, name: "Tube & Pasta Shape Fryums", category: "Fryums", price: null, unit: "Wholesale / Retail", unitType: "pack", isBulk: true },
+      { id: 175, name: "Star & Alphabet Fryums", category: "Fryums", price: null, unit: "Wholesale / Retail", unitType: "pack", isBulk: true }
+    ];
+
+    let activeCategory = "All";
+    let searchQuery = "";
+    let bulkOnly = false;
+    let cart = JSON.parse(localStorage.getItem("sokoni_kisumu_cart")) || [];
+
+    const categories = ["All", ...new Set(products.map(p => p.category))];
+
+    function showToast(msg) {
+      const container = document.getElementById("toastContainer");
+      const toast = document.createElement("div");
+      toast.className = "toast-enter bg-brandBlack text-white text-xs font-semibold px-4 py-2.5 rounded-full shadow-lg border border-gray-700";
+      toast.textContent = msg;
+      container.appendChild(toast);
+      setTimeout(() => toast.remove(), 2200);
+    }
+
+    function renderCategories() {
+      const container = document.getElementById("categoryTabs");
+      container.innerHTML = categories.map(cat => {
+        const isActive = cat === activeCategory && !bulkOnly;
+        return `
+          <button 
+            onclick="selectCategory('${cat}')"
+            class="whitespace-nowrap px-4 py-2 rounded-full text-sm font-semibold transition ${
+              isActive 
+                ? "bg-brandRed text-white shadow-sm" 
+                : "bg-white text-gray-700 border border-gray-200 hover:border-brandRed hover:text-brandRed"
+            }"
+          >
+            ${cat}
+          </button>
+        `;
+      }).join("");
+    }
+
+    function selectCategory(cat) {
+      bulkOnly = false;
+      activeCategory = cat;
+      renderCategories();
+      renderProducts();
+    }
+
+    function filterBulkOnly() {
+      bulkOnly = true;
+      activeCategory = "All";
+      renderCategories();
+      renderProducts();
+      document.getElementById("catalog").scrollIntoView({ behavior: "smooth" });
+    }
+
+    function clearSearch() {
+      searchQuery = "";
+      document.getElementById("desktopSearch").value = "";
+      document.getElementById("mobileSearch").value = "";
+      document.getElementById("clearSearchDesktop").classList.add("hidden");
+      renderProducts();
+    }
+
+    function resetFilters() {
+      bulkOnly = false;
+      activeCategory = "All";
+      clearSearch();
+      renderCategories();
+      renderProducts();
+    }
+
+    function renderProducts() {
+      const filtered = products.filter(p => {
+        const matchesBulk = !bulkOnly || p.isBulk;
+        const matchesCat = activeCategory === "All" || p.category === activeCategory;
+        const matchesSearch = p.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                              p.category.toLowerCase().includes(searchQuery.toLowerCase());
+        return matchesBulk && matchesCat && matchesSearch;
+      });
+
+      document.getElementById("itemCount").textContent = filtered.length;
+      const grid = document.getElementById("productGrid");
+      const empty = document.getElementById("emptyState");
+
+      if (filtered.length === 0) {
+        grid.classList.add("hidden");
+        empty.classList.remove("hidden");
+        return;
+      }
+
+      grid.classList.remove("hidden");
+      empty.classList.add("hidden");
+
+      grid.innerHTML = filtered.map(product => {
+        const inCart = cart.find(item => item.id === product.id);
+        const priceDisplay = product.price !== null 
+          ? `KES ${product.price.toLocaleString()}` 
+          : `<span class="text-brandGreen text-sm">Quote on Order</span>`;
+
+        const quickChips = product.unitType === "kg" ? `
+          <div class="flex items-center gap-1.5 mt-3">
+            <button onclick="setExactQty(${product.id}, 0.25)" class="text-[11px] px-2 py-0.5 rounded border ${inCart?.qty === 0.25 ? 'bg-brandRed text-white border-brandRed' : 'bg-brandCream text-gray-700 border-gray-200 hover:border-brandRed'}">250g</button>
+            <button onclick="setExactQty(${product.id}, 0.5)" class="text-[11px] px-2 py-0.5 rounded border ${inCart?.qty === 0.5 ? 'bg-brandRed text-white border-brandRed' : 'bg-brandCream text-gray-700 border-gray-200 hover:border-brandRed'}">500g</button>
+            <button onclick="setExactQty(${product.id}, 1)" class="text-[11px] px-2 py-0.5 rounded border ${inCart?.qty === 1 ? 'bg-brandRed text-white border-brandRed' : 'bg-brandCream text-gray-700 border-gray-200 hover:border-brandRed'}">1kg</button>
+            <button onclick="setExactQty(${product.id}, 5)" class="text-[11px] px-2 py-0.5 rounded border ${inCart?.qty === 5 ? 'bg-brandGreen text-white border-brandGreen' : 'bg-green-50 text-brandGreen border-green-200 hover:border-brandGreen'}">5kg</button>
+          </div>
+        ` : "";
+
+        const step = product.unitType === "kg" ? 0.25 : 1;
+        const unitLabel = product.unitType === "kg" ? " kg" : "";
+
+        return `
+          <div class="bg-white rounded-2xl border border-gray-200 p-5 flex flex-col justify-between hover:shadow-md hover:border-brandRed/40 transition group">
+            <div>
+              <div class="flex items-center justify-between gap-2 mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-green-50 text-brandGreen">
+                  ${product.category}
+                </span>
+                <span class="text-xs text-gray-400 font-medium">${product.unit}</span>
+              </div>
+              <h3 class="font-bold text-lg text-brandBlack group-hover:text-brandRed transition">${product.name}</h3>
+              ${quickChips}
+            </div>
+
+            <div class="mt-4 pt-4 border-t border-gray-100 flex items-center justify-between">
+              <div>
+                <span class="text-xs text-gray-500 block">Price</span>
+                <span class="font-bold text-lg text-brandBlack">${priceDisplay}</span>
+              </div>
+
+              ${inCart ? `
+                <div class="flex items-center gap-1.5 bg-brandCream border border-gray-300 rounded-full px-2 py-1">
+                  <button onclick="updateQty(${product.id}, -${step})" class="w-7 h-7 rounded-full bg-white text-brandBlack font-bold hover:bg-brandRed hover:text-white transition">-</button>
+                  <span class="text-xs font-bold min-w-[44px] text-center">${inCart.qty}${unitLabel}</span>
+                  <button onclick="updateQty(${product.id}, ${step})" class="w-7 h-7 rounded-full bg-white text-brandBlack font-bold hover:bg-brandGreen hover:text-white transition">+</button>
+                </div>
+              ` : `
+                <button 
+                  onclick="addToCart(${product.id})"
+                  class="px-4 py-2 rounded-full bg-brandBlack hover:bg-brandRed text-white text-xs font-bold transition shadow-xs"
+                >
+                  + Add
+                </button>
+              `}
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    function setExactQty(id, qty) {
+      const product = products.find(p => p.id === id);
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty = qty;
+      } else {
+        cart.push({ ...product, qty });
+      }
+      saveAndSync();
+      showToast(`Set ${product.name} to ${qty} kg`);
+    }
+
+    function addToCart(id) {
+      const product = products.find(p => p.id === id);
+      const existing = cart.find(item => item.id === id);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ ...product, qty: 1 });
+      }
+      saveAndSync();
+      showToast(`Added ${product.name} to Order List`);
+    }
+
+    function updateQty(id, delta) {
+      const index = cart.findIndex(item => item.id === id);
+      if (index === -1) return;
+      cart[index].qty = Math.round((cart[index].qty + delta) * 100) / 100;
+      if (cart[index].qty <= 0) {
+        cart.splice(index, 1);
+      }
+      saveAndSync();
+    }
+
+    function clearCart() {
+      if (cart.length === 0) return;
+      cart = [];
+      saveAndSync();
+      showToast("Order list cleared");
+    }
+
+    function saveAndSync() {
+      localStorage.setItem("sokoni_kisumu_cart", JSON.stringify(cart));
+      renderProducts();
+      renderCart();
+    }
+
+    function renderCart() {
+      const badge = document.getElementById("cartBadge");
+      const container = document.getElementById("cartItems");
+      const totalEl = document.getElementById("cartTotal");
+
+      badge.textContent = cart.length;
+
+      if (cart.length === 0) {
+        container.innerHTML = `
+          <div class="text-center py-12 text-gray-500">
+            <p class="font-semibold text-gray-700">Your order list is empty</p>
+            <p class="text-xs mt-1">Tap 250g, 500g, 1kg, or + Add on any product to start.</p>
+          </div>
+        `;
+        totalEl.textContent = "KES 0";
+        return;
+      }
+
+      let total = 0;
+      let hasUnpriced = false;
+
+      container.innerHTML = cart.map(item => {
+        const step = item.unitType === "kg" ? 0.25 : 1;
+        const unitLabel = item.unitType === "kg" ? " kg" : "";
+        let subText = "";
+
+        if (item.price !== null) {
+          const subtotal = Math.round(item.price * item.qty);
+          total += subtotal;
+          subText = `Subtotal: KES ${subtotal.toLocaleString()}`;
+        } else {
+          hasUnpriced = true;
+          subText = `Price confirmed on WhatsApp`;
+        }
+
+        return `
+          <div class="flex items-center justify-between gap-3 bg-white p-3.5 rounded-xl border border-gray-200">
+            <div>
+              <h4 class="font-bold text-sm text-brandBlack">${item.name}</h4>
+              <p class="text-xs text-gray-500">${item.price !== null ? `KES ${item.price.toLocaleString()} ${item.unit}` : item.unit}</p>
+              <p class="text-xs font-bold text-brandGreen mt-1">${subText}</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <button onclick="updateQty(${item.id}, -${step})" class="w-7 h-7 rounded-full border border-gray-300 font-bold hover:bg-gray-100">-</button>
+              <span class="text-xs font-bold min-w-[42px] text-center">${item.qty}${unitLabel}</span>
+              <button onclick="updateQty(${item.id}, ${step})" class="w-7 h-7 rounded-full border border-gray-300 font-bold hover:bg-gray-100">+</button>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      totalEl.textContent = `KES ${total.toLocaleString()}${hasUnpriced ? " + Quote" : ""}`;
+    }
+
+    function toggleCart() {
+      const drawer = document.getElementById("cartDrawer");
+      const overlay = document.getElementById("cartOverlay");
+      drawer.classList.toggle("translate-x-full");
+      overlay.classList.toggle("hidden");
+    }
+
+    function checkoutWhatsApp() {
+      if (cart.length === 0) {
+        showToast("Add at least one item first");
+        return;
+      }
+
+      const name = document.getElementById("customerName").value.trim();
+      const location = document.getElementById("customerLocation").value.trim();
+
+      let message = "Hello *Sokoni Kisumu*, I would like to place an order:\n";
+      if (name) message += `*Customer:* ${name}\n`;
+      message += `*Delivery Area (Kisumu):* ${location || "Within Kisumu (to confirm exact pin)"}\n\n`;
+
+      let total = 0;
+      let hasUnpriced = false;
+
+      cart.forEach((item, idx) => {
+        const qtyDisplay = item.unitType === "kg" ? `${item.qty} kg` : `${item.qty} pack(s)`;
+        if (item.price !== null) {
+          const sub = Math.round(item.price * item.qty);
+          total += sub;
+          message += `${idx + 1}. *${item.name}* — ${qtyDisplay} (@ KES ${item.price.toLocaleString()}) = *KES ${sub.toLocaleString()}*\n`;
+        } else {
+          hasUnpriced = true;
+          message += `${idx + 1}. *${item.name}* (${item.category}) — ${qtyDisplay} _(Quote requested)_\n`;
+        }
+      });
+
+      message += `\n*Estimated Total: KES ${total.toLocaleString()}${hasUnpriced ? " + Quoted Items" : ""}*\nPlease confirm availability and delivery within Kisumu.`;
+
+      const phone = "254702247123";
+      const url = `https://wa.me/${phone}?text=${encodeURIComponent(message)}`;
+      window.open(url, "_blank");
+    }
+
+    // Search Listeners
+    document.getElementById("desktopSearch").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      document.getElementById("mobileSearch").value = searchQuery;
+      document.getElementById("clearSearchDesktop").classList.toggle("hidden", !searchQuery);
+      renderProducts();
+    });
+
+    document.getElementById("mobileSearch").addEventListener("input", (e) => {
+      searchQuery = e.target.value;
+      document.getElementById("desktopSearch").value = searchQuery;
+      renderProducts();
+    });
+
+    // Initialize
+    renderCategories();
+    renderProducts();
+    renderCart();
+  </script>
+</body>
+</html>
